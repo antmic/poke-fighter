@@ -3,6 +3,7 @@ import Navigation from '@/components/Navigation';
 import SearchBar from '@/components/SearchBar';
 import pool from '@/lib/db';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
 type PokemonPageProps = {
 	params: { name: string };
@@ -57,7 +58,7 @@ export default async function PokemonPage({ params }: PokemonPageProps) {
 			<h1>
 				{pokemon.number} {capitalize(pokemon.name)}
 			</h1>
-			<img src={pokemon.image_url} alt={pokemon.name} />
+			<Image src={pokemon.image_url} alt={pokemon.name} width={120} height={112} />
 			<p>
 				Type: {pokemon.type1} {pokemon.type2 && ` / ${pokemon.type2}`}
 			</p>
