@@ -1,4 +1,5 @@
 // src/app/pokemon/[name]/page.tsx
+import Navigation from '@/components/Navigation';
 import SearchBar from '@/components/SearchBar';
 import pool from '@/lib/db';
 import { notFound } from 'next/navigation';
@@ -52,6 +53,7 @@ export default async function PokemonPage({ params }: PokemonPageProps) {
 
 	return (
 		<div>
+			<Navigation/>
 			<SearchBar />
 			<h1>
 				{pokemon.number} {capitalize(pokemon.name)}

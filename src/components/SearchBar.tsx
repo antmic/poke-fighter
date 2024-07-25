@@ -1,4 +1,4 @@
-// components/SearchComponent.tsx
+// components/SearchBar.tsx
 'use client';
 
 import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
@@ -15,7 +15,7 @@ interface SearchState {
 	isLoading: boolean;
 }
 
-export default function SearchComponent() {
+export default function SearchBar() {
 	const router = useRouter();
 	const [query, setQuery] = useState<string>('');
 	const [searchState, setSearchState] = useState<SearchState>({
