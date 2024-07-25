@@ -1,22 +1,104 @@
-// src/components/SearchBar.tsx
+// components/SearchComponent.tsx
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function SearchBar() {
-	const [searchTerm, setSearchTerm] = useState('');
+interface SearchResponse {
+	hints: string[];
+	message: string | null;
+}
+
+interface SearchState {
+	hints: string[];
+	message: string | null;
+	isLoading: boolean;
+}
+
+export default function SearchComponent() {
 	const router = useRouter();
+	const [query, setQuery] = useState<string>('');
+	const [searchState, setSearchState] = useState<SearchState>({
+		hints: [],
+		message: null,
+		isLoading: false,
+	});
+
+	const latestQuery = useRef(query);
+
+	useEffect(() => {
+		latestQuery.current = query;
+
+		const controller = new AbortController();
+
+		const fetchHints = async () => {
+			if (query.length <= 1) {
+				setSearchState({
+					hints: [],
+					message: null,
+					isLoading: false,
+				});
+				return;
+			}
+
+			try {
+				const response = await fetch(`/api/search-hints?query=${encodeURIComponent(query)}`, {
+					signal: controller.signal,
+				});
+
+				if (!response.ok) throw new Error('Failed to fetch');
+
+				const data: SearchResponse = await response.json();
+
+				// Only update state if this is still the latest query
+				if (latestQuery.current === query) {
+					setSearchState({
+						hints: data.hints,
+						message: data.hints.length === 0 ? data.message || 'No matching Pokémon found' : null,
+						isLoading: false,
+					});
+				}
+			} catch (error) {
+				if (error instanceof Error) {
+					if (error.name !== 'AbortError') {
+						console.error('Error fetching hints:', error);
+						setSearchState({
+							hints: [],
+							message: 'Error fetching hints',
+							isLoading: false,
+						});
+					}
+				} else {
+					console.error('Unexpected error:', error);
+					setSearchState({
+						hints: [],
+						message: 'Unexpected error occurred',
+						isLoading: false,
+					});
+				}
+			}
+		};
+
+		const debounceTimer = setTimeout(() => {
+			setSearchState(prev => ({ ...prev, isLoading: true }));
+			fetchHints();
+		}, 100);
+
+		return () => {
+			clearTimeout(debounceTimer);
+			controller.abort();
+		};
+	}, [query]);
 
 	const handleSearch = async (event: FormEvent) => {
 		event.preventDefault();
 
 		// Make a request to your API to check if the Pokémon exists
-		const response = await fetch(`/api/pokemon?name=${searchTerm}`);
+		const response = await fetch(`/api/pokemon?name=${query}`);
 		const data = await response.json();
 
 		if (data.exists) {
-			router.push(`/pokemon/${searchTerm.toLowerCase()}`);
+			router.push(`/pokemon/${query.toLowerCase()}`);
 		} else {
 			router.push(`/pokemon/not-found`);
 		}
@@ -24,16 +106,30 @@ export default function SearchBar() {
 
 	return (
 		<div>
-			<h1>Search for a Pokémon</h1>
 			<form onSubmit={handleSearch}>
 				<input
 					type='text'
-					value={searchTerm}
-					onChange={e => setSearchTerm(e.target.value)}
-					placeholder='Enter Pokémon name'
+					value={query}
+					onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+					placeholder='Search Pokémon'
 				/>
 				<button type='submit'>Search</button>
 			</form>
+			{query.length > 1 && (
+				<div>
+					{searchState.isLoading && <p>Loading...</p>}
+					{!searchState.isLoading && searchState.hints.length > 0 && (
+						<ul>
+							{searchState.hints.map((hint, index) => (
+								<li key={index} onClick={() => setQuery(hint)}>
+									{hint}
+								</li>
+							))}
+						</ul>
+					)}
+					{!searchState.isLoading && searchState.hints.length === 0 && <p>{searchState.message}</p>}
+				</div>
+			)}
 		</div>
 	);
 }
