@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 interface SearchResponse {
 	hints: string[];
-	message: string | null;
+	found: boolean;
 }
 
 interface SearchState {
@@ -54,7 +54,7 @@ export default function SearchComponent() {
 				if (latestQuery.current === query) {
 					setSearchState({
 						hints: data.hints,
-						message: data.hints.length === 0 ? data.message || 'No matching Pokémon found' : null,
+						message: data.found ? null : 'No Pokémon Found. Did you mean:',
 						isLoading: false,
 					});
 				}
@@ -119,15 +119,18 @@ export default function SearchComponent() {
 				<div>
 					{searchState.isLoading && <p>Loading...</p>}
 					{!searchState.isLoading && searchState.hints.length > 0 && (
-						<ul>
-							{searchState.hints.map((hint, index) => (
-								<li key={index} onClick={() => setQuery(hint)}>
-									{hint}
-								</li>
-							))}
-						</ul>
+						<>
+							<p>{searchState.message}</p>
+							<ul>
+								{searchState.hints.map((hint, index) => (
+									<li key={index} onClick={() => setQuery(hint)}>
+										{hint}
+									</li>
+								))}
+							</ul>
+						</>
 					)}
-					{!searchState.isLoading && searchState.hints.length === 0 && <p>{searchState.message}</p>}
+					{!searchState.isLoading && searchState.hints.length === 0 && <p>Error fetching hints.</p>}
 				</div>
 			)}
 		</div>

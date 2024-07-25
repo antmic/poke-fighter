@@ -16,10 +16,17 @@ export async function GET(req: NextRequest) {
 		]);
 
 		if (result.rows.length === 0) {
-			return NextResponse.json({ hints: [], message: 'No Pokémon found' });
+			const suggestions = await pool.query<{ name: string }>(
+				'SELECT name FROM pokemon ORDER BY similarity(name, $1) DESC LIMIT 5',
+				[query]
+			);
+			return NextResponse.json({
+				hints: suggestions.rows.map(row => row.name),
+				found: false,
+			});
 		}
 
-		return NextResponse.json({ hints: result.rows.map(row => row.name), message: null });
+		return NextResponse.json({ hints: result.rows.map(row => row.name), found: true, suggestions: [] });
 	} catch (error) {
 		console.error('Error executing query', error);
 		return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
