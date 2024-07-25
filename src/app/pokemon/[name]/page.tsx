@@ -21,7 +21,6 @@ function normalize(x: number, decimalPlaces: number): number {
 }
 
 export default async function PokemonPage({ params }: PokemonPageProps) {
-
 	const name = decodeURIComponent(params.name);
 
 	const result = await pool.query('SELECT * FROM pokemon WHERE name = $1', [name]);
@@ -53,7 +52,7 @@ export default async function PokemonPage({ params }: PokemonPageProps) {
 
 	return (
 		<div>
-			<Navigation/>
+			<Navigation />
 			<SearchBar />
 			<h1>
 				{pokemon.number} {capitalize(pokemon.name)}
@@ -64,7 +63,7 @@ export default async function PokemonPage({ params }: PokemonPageProps) {
 			</p>
 			<ul>
 				Best attackers:
-				{pokemon.optimalattackers.map((attackerGroup: AttackerGroup, groupIndex: number) => (
+				{pokemon?.optimalattackers?.map((attackerGroup: AttackerGroup, groupIndex: number) => (
 					<div key={`group-${groupIndex}`}>
 						<h3>
 							Group {groupIndex + 1} - Effectiveness {normalize(attackerGroup[0].Difference, 2)}
