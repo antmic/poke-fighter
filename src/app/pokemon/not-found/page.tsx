@@ -1,14 +1,15 @@
 // src/app/pokemon/not-found/page.tsx
-import Navigation from '@/components/Navigation';
 import SearchBar from '@/components/SearchBar';
+import styles from '@/styles/NotFound.module.scss';
 
 export default function NotFound() {
 	return (
-		<div>
-			<Navigation />
+		<main>
 			<SearchBar />
-			<h1>Pokémon Not Found</h1>
-			<p>The Pokémon you are looking for does not exist.</p>
-		</div>
+			<div className={styles.notFound}>
+				<h4>Pokémon Not Found</h4>
+				<span>The Pokémon you are looking for does not exist.</span>
+			</div>
+		</main>
 	);
 }

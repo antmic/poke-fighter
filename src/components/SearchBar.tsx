@@ -3,13 +3,14 @@
 
 import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import styles from '@/styles/SearchBar.module.scss';
 
 interface SearchResponse {
 	hints: string[];
 	found: boolean;
 }
 
-interface SearchState {
+export interface SearchState {
 	hints: string[];
 	message: string | null;
 	isLoading: boolean;
@@ -54,7 +55,7 @@ export default function SearchBar() {
 				if (latestQuery.current === query) {
 					setSearchState({
 						hints: data.hints,
-						message: data.found ? null : 'No Pokémon Found. Did you mean:',
+						message: data.found ? null : 'No Pokémon Found.\nDid you mean:',
 						isLoading: false,
 					});
 				}
@@ -104,35 +105,58 @@ export default function SearchBar() {
 		}
 	};
 
+	const inputRef = useRef<HTMLInputElement>(null);
+	const handleHintClick = (hint: string) => {
+		setQuery(hint);
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	};
+
 	return (
-		<div>
-			<form onSubmit={handleSearch}>
-				<input
-					type='text'
-					value={query}
-					onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
-					placeholder='Search Pokémon'
-				/>
-				<button type='submit'>Search</button>
-			</form>
-			{query.length > 1 && (
-				<div>
-					{searchState.isLoading && <p>Loading...</p>}
-					{!searchState.isLoading && searchState.hints.length > 0 && (
-						<>
-							<p>{searchState.message}</p>
-							<ul>
-								{searchState.hints.map((hint, index) => (
-									<li key={index} onClick={() => setQuery(hint)}>
-										{hint}
-									</li>
-								))}
-							</ul>
-						</>
+		<div className={styles.searchBarWrapper}>
+			<div className={`nes-container is-rounded ${styles.searchBar}`}>
+				<form onSubmit={handleSearch} className={styles.form}>
+					<input
+						name='searchForm'
+						ref={inputRef}
+						type='text'
+						value={query}
+						onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+						placeholder='Search Pokémon'
+						className={`nes-input ${searchState.message ? 'is-error' : ''} ${
+							searchState.hints.length === 1 && searchState.hints[0] === query.toLowerCase() ? 'is-success' : ''
+						}`}
+					/>
+					<button type='submit' className='nes-btn'>
+						Search
+					</button>
+				</form>
+				<>
+					{query.length > 1 && (
+						<div className={styles.hintsWrapper}>
+							<div className={`nes-balloon is-rounded ${styles.hintsBalloon}`}>
+								{searchState.isLoading && <p>Loading...</p>}
+								{!searchState.isLoading && searchState.hints.length > 0 && (
+									<>
+										{searchState.message && (
+											<p className={`nes-text is-error ${styles.message}`}>{searchState.message}</p>
+										)}
+										<ul className={styles.list}>
+											{searchState.hints.map((hint, index) => (
+												<li className={styles.item} key={index} onClick={() => handleHintClick(hint)}>
+													{hint}
+												</li>
+											))}
+										</ul>
+									</>
+								)}
+								{!searchState.isLoading && searchState.hints.length === 0 && <p>Error fetching hints.</p>}
+							</div>
+						</div>
 					)}
-					{!searchState.isLoading && searchState.hints.length === 0 && <p>Error fetching hints.</p>}
-				</div>
-			)}
+				</>
+			</div>
 		</div>
 	);
 }

@@ -1,0 +1,32 @@
+@import './variables.scss';
+
+.header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+	gap: 10px;
+
+	.icon {
+		min-width: 84px;
+	}
+
+	.headerText {
+		font-size: $font-x-large;
+		text-align: center;
+	}
+}
+
+@media (max-width: $mobile) {
+	.header {
+		font-size: $font-medium;
+		margin: 5px;
+	}
+}
+
+@media (min-width: $tablet) {
+	.header {
+		font-size: $font-large;
+		margin: 10px;
+	}
+}

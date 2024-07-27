@@ -1,0 +1,55 @@
+@import './variables.scss';
+
+.searchBarWrapper {
+	display: flex;
+	justify-content: center;
+
+	.searchBar {
+		.form {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			gap: 5px;
+		}
+
+		.hintsWrapper {
+			position: absolute;
+			z-index: 1;
+
+			.message {
+				margin-bottom: 4px;
+			}
+		}
+	}
+}
+
+@media (max-width: $mobile) {
+	.searchBarWrapper {
+		margin: 5px;
+		font-size: $font-small;
+
+		.searchBar {
+			padding: 5px !important;
+
+			.hintsWrapper {
+				.hintsBalloon {
+					padding: 5px 10px !important;
+
+					.list {
+						.item {
+							padding: 4px 0;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (min-width: $tablet) {
+	.searchBarWrapper {
+		font-size: $font-large;
+		margin: 30px;
+	}
+}
