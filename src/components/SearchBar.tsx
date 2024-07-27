@@ -124,7 +124,7 @@ export default function SearchBar() {
 						value={query}
 						onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
 						placeholder='Search Pokémon'
-						className={`nes-input ${searchState.message ? 'is-error' : ''} ${
+						className={`nes-pointer nes-input ${searchState.message ? 'is-error' : ''} ${
 							searchState.hints.length === 1 && searchState.hints[0] === query.toLowerCase() ? 'is-success' : ''
 						}`}
 					/>

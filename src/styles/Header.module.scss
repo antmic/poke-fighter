@@ -30,3 +30,11 @@
 		margin: 10px;
 	}
 }
+
+@media (min-width: $desktop) {
+	.header {
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

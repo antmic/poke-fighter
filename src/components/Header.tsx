@@ -13,7 +13,7 @@ const Header: React.FC = () => {
 	};
 
 	return (
-		<header className={styles.header} onClick={handleGoHome}>
+		<header className={`${styles.header} nes-pointer`} onClick={handleGoHome}>
 			<i className={`nes-ash ${styles.icon}`}></i>
 			<h1 className={styles.headerText}>Pokémon Weakness Finder</h1>
 			<i className={`nes-pokeball ${styles.icon}`}></i>

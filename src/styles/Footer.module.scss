@@ -19,3 +19,12 @@
 		font-size: $font-medium;
 	}
 }
+
+@media (min-width: $desktop) {
+	.footer {
+		&:hover {
+			text-decoration: underline;
+			text-decoration-thickness: 2px;
+		}
+	}
+}
