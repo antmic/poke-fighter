@@ -6,17 +6,12 @@
 	align-items: center;
 	gap: 10px;
 	margin: 10px;
-}
-
-@media (max-width: $mobile) {
-	.footer {
-		font-size: $font-small;
-	}
+	font-size: $font-small;
 }
 
 @media (min-width: $tablet) {
 	.footer {
-		font-size: $font-medium;
+		font-size: $font-large;
 	}
 }
 

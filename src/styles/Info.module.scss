@@ -4,3 +4,9 @@
 	margin: 20px 5px;
 	font-size: $font-small;
 }
+
+@media (min-width: $mobile) {
+	.info {
+		font-size: $font-large;
+	}
+}

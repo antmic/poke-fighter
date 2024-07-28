@@ -39,8 +39,8 @@
 		}
 
 		.imageContainer {
-			width: 200px;
-			height: 200px;
+			width: 230px;
+			height: 230px;
 			overflow: hidden;
 			position: relative;
 
@@ -50,18 +50,18 @@
 				object-fit: cover;
 				object-position: bottom;
 				image-rendering: pixelated;
-				transform: scale(1.2);
 				position: relative;
-				top: -10%;
 			}
 		}
 
 		.name {
 			text-align: center;
+			font-size: $font-x-large;
+			margin: 20px;
 		}
 
 		.types {
-			font-size: $font-medium;
+			font-size: $font-small;
 
 			&.attackWrapper {
 				margin-bottom: 12px;
@@ -117,8 +117,8 @@
 		}
 
 		.type {
-			font-size: $font-small;
-			padding: 5px;
+			font-size: $font-x-small;
+			padding: 2px;
 		}
 
 		.type__normal {
@@ -195,16 +195,44 @@
 	}
 }
 
-@media (min-width: $tablet) {
+@media (min-width: $mobile) {
 	.wrapper {
 		.pokemonInfo {
 			.types {
 				font-size: $font-large;
+			}
 
-				& > * {
-					font-size: $font-medium;
-					padding: 5px;
-				}
+			.type {
+				font-size: $font-small;
+				padding: 2px;
+			}
+
+			.table {
+				font-size: 16px;
+			}
+		}
+	}
+}
+
+@media (min-width: $tablet) {
+	.wrapper {
+		.pokemonInfo {
+			.name {
+				font-size: $font-xx-large;
+			}
+
+			.types,
+			.title {
+				font-size: $font-x-large;
+			}
+
+			.type {
+				font-size: $font-large;
+				padding: 5px;
+			}
+
+			.table {
+				font-size: $font-x-large;
 			}
 		}
 	}

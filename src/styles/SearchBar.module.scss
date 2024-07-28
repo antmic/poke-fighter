@@ -3,8 +3,17 @@
 .searchBarWrapper {
 	display: flex;
 	justify-content: center;
+	margin: 5px;
+	font-size: $font-small;
+
+	.iosInput {
+		font-size: $font-large;
+		padding: 4px 8px;
+	}
 
 	.searchBar {
+		padding: 5px !important;
+
 		.form {
 			display: flex;
 			flex-direction: row;
@@ -17,29 +26,16 @@
 			position: absolute;
 			z-index: 1;
 
-			.message {
-				margin-bottom: 4px;
-			}
-		}
-	}
-}
+			.hintsBalloon {
+				padding: 5px 10px !important;
 
-@media (max-width: $mobile) {
-	.searchBarWrapper {
-		margin: 5px;
-		font-size: $font-small;
+				.message {
+					margin-bottom: 4px;
+				}
 
-		.searchBar {
-			padding: 5px !important;
-
-			.hintsWrapper {
-				.hintsBalloon {
-					padding: 5px 10px !important;
-
-					.list {
-						.item {
-							padding: 4px 0;
-						}
+				.list {
+					.item {
+						padding: 8px 0;
 					}
 				}
 			}
@@ -47,9 +43,32 @@
 	}
 }
 
+@media (min-width: $mobile) {
+	.searchBarWrapper {
+		font-size: $font-medium;
+	}
+}
+
 @media (min-width: $tablet) {
 	.searchBarWrapper {
-		font-size: $font-large;
+		font-size: $font-x-large;
 		margin: 30px;
+		min-width: 565px;
+
+		.iosInput {
+			font-size: $font-x-large;
+			padding: 0.5rem 1rem;
+		}
+
+		.searchBar {
+			width: -webkit-fill-available;
+			padding: 10px !important;
+
+			.form {
+				& button {
+					padding: 0.5rem 1rem;
+				}
+			}
+		}
 	}
 }

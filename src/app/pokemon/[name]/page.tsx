@@ -83,7 +83,7 @@ export default async function PokemonPage({ params }: PokemonPageProps) {
 					</span>
 				</div>
 				<div className={`nes-container is-rounded with-title ${styles.pokemonInfo}`}>
-					<span className='title'>Vulnerable to:</span>
+					<span className={`title ${styles.title}`}>Vulnerable to:</span>
 					<ul>
 						{pokemon?.attacks?.map((attack: Attack, index: number) => (
 							<li className={`${styles.types} ${styles.attackWrapper}`} key={index}>
@@ -99,7 +99,7 @@ export default async function PokemonPage({ params }: PokemonPageProps) {
 					</ul>
 				</div>
 				<div className={`nes-container is-rounded with-title ${styles.pokemonInfo}`}>
-					<span className='title'>Best attackers:</span>
+					<span className={`title ${styles.title}`}>Best attackers:</span>
 					{pokemon?.optimalattackers?.map((attackerGroup: AttackerGroup, groupIndex: number) => (
 						<div className={styles.group} key={`group-${groupIndex}`}>
 							<div className={styles.table}>

@@ -6,28 +6,35 @@
 	align-items: center;
 	flex-direction: row;
 	gap: 10px;
+	margin: 5px;
 
 	.icon {
 		min-width: 84px;
 	}
 
 	.headerText {
-		font-size: $font-x-large;
+		font-size: $font-large;
 		text-align: center;
+		margin-bottom: 0;
 	}
 }
 
-@media (max-width: $mobile) {
+@media (min-width: $mobile) {
 	.header {
-		font-size: $font-medium;
-		margin: 5px;
+		.headerText {
+			font-size: $font-x-large;
+		}
 	}
 }
 
 @media (min-width: $tablet) {
 	.header {
-		font-size: $font-large;
 		margin: 10px;
+		gap: 20px;
+
+		.headerText {
+			font-size: $font-xx-large;
+		}
 	}
 }
 
