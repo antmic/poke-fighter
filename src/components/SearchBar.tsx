@@ -91,35 +91,29 @@ export default function SearchBar() {
 		};
 	}, [query]);
 
-	const handleSearch = async (event: FormEvent) => {
-		event.preventDefault();
-
+	const handleSearch = async (pokemonName: string) => {
 		// Make a request to your API to check if the Pokémon exists
-		const response = await fetch(`/api/pokemon?name=${query}`);
+		const response = await fetch(`/api/pokemon?name=${pokemonName}`);
 		const data = await response.json();
 
 		if (data.exists) {
-			router.push(`/pokemon/${query.toLowerCase()}`);
+			router.push(`/pokemon/${pokemonName.toLowerCase()}`);
 		} else {
 			router.push(`/pokemon/not-found`);
 		}
 	};
 
-	const inputRef = useRef<HTMLInputElement>(null);
-	const handleHintClick = (hint: string) => {
-		setQuery(hint);
-		if (inputRef.current) {
-			inputRef.current.focus();
-		}
+	const handleSubmit = (e: FormEvent) => {
+		e.preventDefault(); // Prevent the default form submission
+		handleSearch(query);
 	};
 
 	return (
 		<div className={styles.searchBarWrapper}>
 			<div className={`nes-container is-rounded ${styles.searchBar}`}>
-				<form onSubmit={handleSearch} autoComplete='off' className={styles.form}>
+				<form autoComplete='off' className={styles.form} onSubmit={handleSubmit}>
 					<input
 						name='searchForm'
-						ref={inputRef}
 						type='text'
 						value={query}
 						onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
@@ -128,7 +122,12 @@ export default function SearchBar() {
 							searchState.hints.length === 1 && searchState.hints[0] === query.toLowerCase() ? 'is-success' : ''
 						}`}
 					/>
-					<button type='submit' className='nes-btn'>
+					<button
+						type='button'
+						className='nes-btn'
+						onClick={() => {
+							handleSearch(query);
+						}}>
 						Search
 					</button>
 				</form>
@@ -144,7 +143,7 @@ export default function SearchBar() {
 										)}
 										<ul className={styles.list}>
 											{searchState.hints.map((hint, index) => (
-												<li className={styles.item} key={index} onClick={() => handleHintClick(hint)}>
+												<li className={styles.item} key={index} onClick={() => handleSearch(hint)}>
 													{hint}
 												</li>
 											))}
