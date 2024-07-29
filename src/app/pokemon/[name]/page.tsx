@@ -5,17 +5,11 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import styles from '@/styles/PokemonPage.module.scss';
 import capitalize from '@/utils/capitalize';
+import normalize from '@/utils/normalize';
 
 type PokemonPageProps = {
 	params: { name: string };
 };
-
-function normalize(x: number, decimalPlaces: number): number {
-	const xMin: number = -2.32;
-	const xMax: number = 2.32;
-	const normalized = ((x - xMin) / (xMax - xMin)) * 100;
-	return parseFloat(normalized.toFixed(decimalPlaces));
-}
 
 export default async function PokemonPage({ params }: PokemonPageProps) {
 	const name = decodeURIComponent(params.name);
