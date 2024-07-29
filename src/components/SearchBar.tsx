@@ -4,7 +4,6 @@
 import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '@/styles/SearchBar.module.scss';
-import { isIOS } from '@/utils/isIOS';
 
 interface SearchResponse {
 	hints: string[];
@@ -25,12 +24,6 @@ export default function SearchBar() {
 		message: null,
 		isLoading: false,
 	});
-
-	const [isIOSDevice, setIsIOSDevice] = useState(false);
-
-	useEffect(() => {
-		setIsIOSDevice(isIOS());
-	}, []);
 
 	const latestQuery = useRef(query);
 
@@ -123,7 +116,7 @@ export default function SearchBar() {
 	return (
 		<div className={styles.searchBarWrapper}>
 			<div className={`nes-container is-rounded ${styles.searchBar}`}>
-				<form onSubmit={handleSearch} className={styles.form}>
+				<form onSubmit={handleSearch} autoComplete='off' className={styles.form}>
 					<input
 						name='searchForm'
 						ref={inputRef}
@@ -131,9 +124,9 @@ export default function SearchBar() {
 						value={query}
 						onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
 						placeholder='Pokémon name'
-						className={`${isIOSDevice ? styles.iosInput : ''} nes-pointer nes-input ${
-							searchState.message ? 'is-error' : ''
-						} ${searchState.hints.length === 1 && searchState.hints[0] === query.toLowerCase() ? 'is-success' : ''}`}
+						className={`nes-pointer nes-input ${styles.input} ${searchState.message ? 'is-error' : ''} ${
+							searchState.hints.length === 1 && searchState.hints[0] === query.toLowerCase() ? 'is-success' : ''
+						}`}
 					/>
 					<button type='submit' className='nes-btn'>
 						Search

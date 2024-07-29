@@ -6,11 +6,6 @@
 	margin: 5px;
 	font-size: $font-small;
 
-	.iosInput {
-		font-size: $font-large;
-		padding: 4px 8px;
-	}
-
 	.searchBar {
 		padding: 5px !important;
 
@@ -20,6 +15,11 @@
 			justify-content: center;
 			align-items: center;
 			gap: 5px;
+
+			.input {
+				font-size: $font-large;
+				padding: 4px 8px;
+			}
 		}
 
 		.hintsWrapper {
@@ -55,17 +55,14 @@
 		margin: 30px;
 		min-width: 565px;
 
-		.iosInput {
-			font-size: $font-x-large;
-			padding: 0.5rem 1rem;
-		}
-
 		.searchBar {
 			width: -webkit-fill-available;
 			padding: 10px !important;
 
 			.form {
+				.input,
 				& button {
+					font-size: $font-x-large;
 					padding: 0.5rem 1rem;
 				}
 			}
