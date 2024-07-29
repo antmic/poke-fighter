@@ -4,15 +4,11 @@ import pool from '@/lib/db';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import styles from '@/styles/PokemonPage.module.scss';
+import capitalize from '@/utils/capitalize';
 
 type PokemonPageProps = {
 	params: { name: string };
 };
-
-function capitalize(str: string) {
-	if (!str) return '';
-	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
 
 function normalize(x: number, decimalPlaces: number): number {
 	const xMin: number = -2.32;
@@ -64,7 +60,14 @@ export default async function PokemonPage({ params }: PokemonPageProps) {
 				<div className={`nes-container is-rounded with-title ${styles.pokemonInfo}`}>
 					<h3 className={styles.number}>{pokemon.number}</h3>
 					<div className={styles.imageContainer}>
-						<Image className={styles.image} src={pokemon.image_url} alt={pokemon.name} width={120} height={112} />
+						<Image
+							priority
+							className={styles.image}
+							src={pokemon.image_url}
+							alt={pokemon.name}
+							width={120}
+							height={112}
+						/>
 					</div>
 					<h1 className={styles.name}>{capitalize(pokemon.name)}</h1>
 					<span className={styles.types}>

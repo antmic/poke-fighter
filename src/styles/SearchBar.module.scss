@@ -37,6 +37,12 @@
 					.item {
 						padding: 8px 0;
 					}
+
+					.selected {
+						font-weight: bold;
+						text-decoration: underline;
+						text-decoration-thickness: 2px;
+					}
 				}
 			}
 		}

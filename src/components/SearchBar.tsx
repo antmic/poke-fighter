@@ -4,6 +4,7 @@
 import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '@/styles/SearchBar.module.scss';
+import capitalize from '@/utils/capitalize';
 
 interface SearchResponse {
 	hints: string[];
@@ -24,7 +25,7 @@ export default function SearchBar() {
 		message: null,
 		isLoading: false,
 	});
-
+	const [selectedHintIndex, setSelectedHintIndex] = useState<number>(-1);
 	const latestQuery = useRef(query);
 
 	useEffect(() => {
@@ -105,7 +106,35 @@ export default function SearchBar() {
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault(); // Prevent the default form submission
-		handleSearch(query);
+		if (selectedHintIndex < 0) {
+			handleSearch(query);
+		}
+	};
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		switch (e.key) {
+			case 'ArrowDown':
+				setSelectedHintIndex(prevIndex => (prevIndex + 1) % searchState.hints.length);
+				break;
+			case 'ArrowUp':
+				setSelectedHintIndex(prevIndex => (prevIndex - 1 + searchState.hints.length) % searchState.hints.length);
+				break;
+			case 'Enter':
+				if (selectedHintIndex >= 0) {
+					handleSearch(searchState.hints[selectedHintIndex]);
+				}
+				break;
+			default:
+				break;
+		}
+	};
+
+	const handleButtonClick = () => {
+		if (selectedHintIndex < 0) {
+			handleSearch(query);
+		} else {
+			handleSearch(searchState.hints[selectedHintIndex]);
+		}
 	};
 
 	return (
@@ -121,12 +150,13 @@ export default function SearchBar() {
 						className={`nes-pointer nes-input ${styles.input} ${searchState.message ? 'is-error' : ''} ${
 							searchState.hints.length === 1 && searchState.hints[0] === query.toLowerCase() ? 'is-success' : ''
 						}`}
+						onKeyDown={handleKeyDown}
 					/>
 					<button
 						type='button'
 						className='nes-btn'
 						onClick={() => {
-							handleSearch(query);
+							handleButtonClick();
 						}}>
 						Search
 					</button>
@@ -143,8 +173,13 @@ export default function SearchBar() {
 										)}
 										<ul className={styles.list}>
 											{searchState.hints.map((hint, index) => (
-												<li className={styles.item} key={index} onClick={() => handleSearch(hint)}>
-													{hint}
+												<li
+													className={`${styles.item} ${
+														index === selectedHintIndex ? `${styles.selected} nes-text is-primary` : ''
+													}`}
+													key={index}
+													onClick={() => handleButtonClick()}>
+													{capitalize(hint)}
 												</li>
 											))}
 										</ul>
