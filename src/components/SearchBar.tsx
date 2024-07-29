@@ -1,21 +1,12 @@
 // components/SearchBar.tsx
 'use client';
 
-import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
+import { useState, useEffect, useRef, FormEvent, ChangeEvent, MutableRefObject } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '@/styles/SearchBar.module.scss';
 import capitalize from '@/utils/capitalize';
-
-interface SearchResponse {
-	hints: string[];
-	found: boolean;
-}
-
-export interface SearchState {
-	hints: string[];
-	message: string | null;
-	isLoading: boolean;
-}
+import fetchHints from '@/utils/fetchHints';
+import { SearchState } from '@/types/types';
 
 export default function SearchBar() {
 	const router = useRouter();
@@ -33,57 +24,10 @@ export default function SearchBar() {
 
 		const controller = new AbortController();
 
-		const fetchHints = async () => {
-			if (query.length <= 1) {
-				setSearchState({
-					hints: [],
-					message: null,
-					isLoading: false,
-				});
-				return;
-			}
-
-			try {
-				const response = await fetch(`/api/search-hints?query=${encodeURIComponent(query)}`, {
-					signal: controller.signal,
-				});
-
-				if (!response.ok) throw new Error('Failed to fetch');
-
-				const data: SearchResponse = await response.json();
-
-				// Only update state if this is still the latest query
-				if (latestQuery.current === query) {
-					setSearchState({
-						hints: data.hints,
-						message: data.found ? null : 'No Pokémon Found.\nDid you mean:',
-						isLoading: false,
-					});
-				}
-			} catch (error) {
-				if (error instanceof Error) {
-					if (error.name !== 'AbortError') {
-						console.error('Error fetching hints:', error);
-						setSearchState({
-							hints: [],
-							message: 'Error fetching hints',
-							isLoading: false,
-						});
-					}
-				} else {
-					console.error('Unexpected error:', error);
-					setSearchState({
-						hints: [],
-						message: 'Unexpected error occurred',
-						isLoading: false,
-					});
-				}
-			}
-		};
-
-		const debounceTimer = setTimeout(() => {
+		const debounceTimer = setTimeout(async () => {
 			setSearchState(prev => ({ ...prev, isLoading: true }));
-			fetchHints();
+			const newState = await fetchHints(query, latestQuery, controller);
+			setSearchState(newState);
 		}, 100);
 
 		return () => {
