@@ -178,7 +178,7 @@ export default function SearchBar() {
 														index === selectedHintIndex ? `${styles.selected} nes-text is-primary` : ''
 													}`}
 													key={index}
-													onClick={() => handleButtonClick()}>
+													onClick={() => handleSearch(hint)}>
 													{capitalize(hint)}
 												</li>
 											))}
