@@ -16,6 +16,7 @@ export default function SearchBar() {
 		message: null,
 		isLoading: false,
 	});
+	const [isQueryValid, setIsQueryValid] = useState<boolean>(false);
 	const [selectedHintIndex, setSelectedHintIndex] = useState<number>(-1);
 	const latestQuery = useRef(query);
 
@@ -28,6 +29,7 @@ export default function SearchBar() {
 			setSearchState(prev => ({ ...prev, isLoading: true }));
 			const newState = await fetchHints(query, latestQuery, controller);
 			setSearchState(newState);
+			setIsQueryValid(() => newState.hints.some(hint => hint === query.toLowerCase()));
 		}, 100);
 
 		return () => {
@@ -50,7 +52,7 @@ export default function SearchBar() {
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault(); // Prevent the default form submission
-		if (selectedHintIndex < 0) {
+		if (selectedHintIndex < 0 && isQueryValid) {
 			handleSearch(query);
 		}
 	};
@@ -74,9 +76,9 @@ export default function SearchBar() {
 	};
 
 	const handleButtonClick = () => {
-		if (selectedHintIndex < 0) {
+		if (selectedHintIndex < 0 && isQueryValid) {
 			handleSearch(query);
-		} else {
+		} else if (selectedHintIndex >= 0) {
 			handleSearch(searchState.hints[selectedHintIndex]);
 		}
 	};
@@ -92,7 +94,7 @@ export default function SearchBar() {
 						onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
 						placeholder='Pokémon name'
 						className={`nes-pointer nes-input ${styles.input} ${searchState.message ? 'is-error' : ''} ${
-							searchState.hints.length === 1 && searchState.hints[0] === query.toLowerCase() ? 'is-success' : ''
+							isQueryValid ? 'is-success' : ''
 						}`}
 						onKeyDown={handleKeyDown}
 					/>
@@ -129,7 +131,6 @@ export default function SearchBar() {
 										</ul>
 									</>
 								)}
-								{!searchState.isLoading && searchState.hints.length === 0 && <p>Error fetching hints.</p>}
 							</div>
 						</div>
 					)}
